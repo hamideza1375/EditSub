@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const fileUpload = require("express-fileupload");
 const setHeaders = require("./header");
-const shortid = require("shortid");
 const RootPath = require("app-root-path");
 
 //! download models
@@ -42,7 +41,7 @@ model.enableExternalScorer(scorerPath);
 app.post('/upload', async (req, res) => {
   if (!req.files) return res.status(400).json('err')
   const video = req.files.video;
-  const fileName = `${shortid.generate()}_${video.name}`;
+  const fileName = `${Date.now()}_${video.name}`;
   fs.writeFileSync(`${RootPath}/public/${fileName}`, video.data);
   const subtitle = await createSubtitle(`${RootPath}/public/${fileName}`)
   fs.unlinkSync(`${RootPath}/public/${fileName}.wav`)

@@ -29,11 +29,14 @@
         if (status === 200) {
             document.getElementById('p').innerHTML = data.text
             document.querySelector('video').src = "http://localhost:4000/" + data.videoUrl
-            setInterval(() => {
+            int = setInterval(() => {
                 document.getElementById('divScroll').style.overflowY = 'scroll'
                 document.getElementById('divScroll').scrollTo(0, count)
                 count += 20
-            }, 3000);
+                if (count >= document.getElementById('divScroll').clientHeight) {
+                    clearInterval(int)
+                }
+            }, 4000);
         }
     }
 </script>
