@@ -20,7 +20,7 @@
 </body>
 <script src="./public/axios.js"></script>
 <script>
-    let count = 20
+    let count = 20, int
     async function sendFile(event) {
         event.preventDefault();
         const fData = new FormData();
@@ -29,16 +29,25 @@
         if (status === 200) {
             document.getElementById('p').innerHTML = data.text
             document.querySelector('video').src = "http://localhost:4000/" + data.videoUrl
-            int = setInterval(() => {
-                document.getElementById('divScroll').style.overflowY = 'scroll'
-                document.getElementById('divScroll').scrollTo(0, count)
-                count += 20
-                if (count >= document.getElementById('divScroll').clientHeight) {
-                    clearInterval(int)
-                }
-            }, 4000);
         }
     }
+
+    document.getElementById('divScroll').onscroll = () => {
+        count = document.getElementById('divScroll').scrollTop
+    }
+
+    document.querySelector('video').onplay = () => {
+        document.getElementById('divScroll').style.overflowY = 'scroll'
+        count = document.getElementById('divScroll').scrollTop
+        int = setInterval(() => {
+            document.getElementById('divScroll').scrollTo(0, count)
+            count += 20
+            if (count >= document.getElementById('divScroll').scrollHeight) { clearInterval(int) }
+        }, 3000);
+    }
+    
+    document.querySelector('video').onpause = () => { if (int && !document.querySelector('video').ended) clearInterval(int) }
+
 </script>
 
 </html>
