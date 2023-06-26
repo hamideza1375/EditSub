@@ -34,6 +34,7 @@
 
     document.getElementById('divScroll').onscroll = () => {
         count = document.getElementById('divScroll').scrollTop
+        count += 20
     }
 
     document.querySelector('video').onplay = () => {
@@ -45,7 +46,7 @@
             if (count >= document.getElementById('divScroll').scrollHeight) { clearInterval(int) }
         }, 3000);
     }
-    
+
     document.querySelector('video').onpause = () => { if (int && !document.querySelector('video').ended) clearInterval(int) }
 
 </script>
