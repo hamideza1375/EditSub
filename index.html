@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 
-<body>
+<body style="display: flex;flex-direction: column;" >
     <form onsubmit="sendFile(event)">
         <input accept="video/*" type="file" /><br>
         <input type="submit" />
@@ -17,6 +17,9 @@
     <div id="divScroll" style="height: 100px; width: 360px; margin: 0 auto;">
         <p id="p" style="font-size: 16px; line-height: 2; font-weight: 600; padding: 10px; text-align: justify;"></p>
     </div>
+    <audio style="display: flex; align-self: center; " autoplay controls>
+        <source type="audio/wav">
+    </audio>
 </body>
 <script src="./public/axios.js"></script>
 <script>
@@ -29,6 +32,7 @@
         if (status === 200) {
             document.getElementById('p').innerHTML = data.text
             document.querySelector('video').src = "http://localhost:4000/" + data.videoUrl
+            document.querySelector('audio').src = "http://localhost:4000/" + data.audioUrl
         }
     }
 
@@ -47,7 +51,7 @@
         }, 3000);
     }
 
-    document.querySelector('video').onpause = () => { if (int && !document.querySelector('video').ended) clearInterval(int) }
+    document.querySelector('video').onpause = () => { if (int) clearInterval(int) }
 
 </script>
 

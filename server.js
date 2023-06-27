@@ -43,10 +43,10 @@ app.post('/upload', async (req, res) => {
   const video = req.files.video;
   const fileName = `${Date.now()}_${video.name}`;
   fs.writeFileSync(`${RootPath}/public/${fileName}`, video.data);
-  const subtitle = await createSubtitle(`${RootPath}/public/${fileName}`)
+  const {subtitle, audioUrl} = await createSubtitle(`${RootPath}/public/${fileName}`)
   fs.unlinkSync(`${RootPath}/public/${fileName}.wav`)
   console.log('fileName', fileName);
-  res.status(200).json({ text: subtitle, videoUrl: fileName })
+  res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName })
 })
 
 const port = 4000
@@ -119,7 +119,8 @@ async function createSubtitle(url) {
       let result = model.stt(audioBuffer);
       const { text } = await translate(result, { to: 'fa' });
       fs.writeFileSync(`${rootPath}/test.txt`, text);
-      resolve(text)
+      execSync(`espeak-ng -v fa -f ${rootPath}/test.txt -w ${rootPath}/public/output.wav`)
+      resolve({subtitle:text, audioUrl:`output.wav`})
     });
   })
 }
