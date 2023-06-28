@@ -119,7 +119,7 @@ async function createSubtitle(url) {
       let result = model.stt(audioBuffer);
       const { text } = await translate(result, { to: 'fa' });
       fs.writeFileSync(`${rootPath}/test.txt`, text);
-      execSync(`espeak-ng -v fa -f ${rootPath}/test.txt -s 170 -p 30 -w ${rootPath}/public/output.wav`)
+      execSync(`espeak-ng -v fa -f ${rootPath}/test.txt -s 170 -p 20 -a 200 -w ${rootPath}/public/output.wav`)
       resolve({subtitle:text, audioUrl:`output.wav`})
     });
   })

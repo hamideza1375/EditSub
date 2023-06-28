@@ -1,3 +1,4 @@
 node_modules/
 models/
 public/*.mp4
+public/*.wav
