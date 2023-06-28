@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 
-<body style="display: flex;flex-direction: column;" >
+<body style="display: flex;flex-direction: column;">
     <form onsubmit="sendFile(event)">
         <input accept="video/*" type="file" /><br>
         <input type="submit" />
@@ -42,16 +42,17 @@
     }
 
     document.querySelector('video').onplay = () => {
+        document.querySelector('audio').play()
         document.getElementById('divScroll').style.overflowY = 'scroll'
         count = document.getElementById('divScroll').scrollTop
         int = setInterval(() => {
             document.getElementById('divScroll').scrollTo(0, count)
             count += 20
             if (count >= document.getElementById('divScroll').scrollHeight) { clearInterval(int) }
-        }, 2800);
+        }, 2950);
     }
 
-    document.querySelector('video').onpause = () => { if (int) clearInterval(int) }
+    document.querySelector('video').onpause = () => { document.querySelector('audio').pause(); if (int) clearInterval(int) }
 
 </script>
 
