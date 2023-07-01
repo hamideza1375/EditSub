@@ -72,6 +72,7 @@ app.post('/upload', async (req, res) => {
 app.post('/upload2', async (req, res) => {
     execSync(`${ffmpegStatic} -ss ${req.body.part1} -i ${RootPath}/public/${req.body.fileName} -t ${req.body.part2} -c copy -f mp4 ${RootPath}/public/${req.body.fileName}2.mp4`)
     const { subtitle, audioUrl, audioLength } = await createSubtitle(`${RootPath}/public/${req.body.fileName}2.mp4`)
+    fs.unlinkSync(`${RootPath}/public/${req.body.fileName}`)
     fs.unlinkSync(`${RootPath}/public/${req.body.fileName}2.mp4`)
     fs.unlinkSync(`${RootPath}/public/${req.body.fileName}2.mp4.wav`)
     res.status(200).json({ text: subtitle, audioUrl, audioLength })
