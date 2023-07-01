@@ -105,11 +105,11 @@
         playCount += 1
         document.querySelector('audio').play()
         count = document.getElementById('divScroll').scrollTop
-        count += 5
+        setTimeout(() => {count += 1}, 2000);
         int = setInterval(() => {
             document.getElementById('divScroll').scrollTo(0, count)
             if (count >= document.getElementById('divScroll').scrollHeight) { clearInterval(int) }
-        }, 2000);
+        }, 2400);
     }
 
     document.querySelector('video').onpause = () => {
