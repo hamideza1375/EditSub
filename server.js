@@ -63,6 +63,7 @@ const seconder = (secound) => {
 
 app.post('/upload', async (req, res) => {
   const {part1, part2, part3} = seconder(req.body.duration)
+  console.log('ssssssss', {part1, part2, part3} );
   if (!req.files) return res.status(400).json('err')
   const video = req.files.video;
   const fileName = `${Date.now()}_${video.name}`;
@@ -87,7 +88,7 @@ app.post('/upload2', async (req, res) => {
 
 app.post('/upload3', async (req, res) => {
   execSync(`${ffmpegStatic} -ss ${req.body.part2} -i ${RootPath}/public/${req.body.fileName} -t ${req.body.part3} -c copy -f mp4 ${RootPath}/public/${req.body.fileName}3.mp4`)
-  const { subtitle, audioUrl, audioLength } = await createSubtitle(`${RootPath}/public/${req.body.fileName}2.mp4`)
+  const { subtitle, audioUrl, audioLength } = await createSubtitle(`${RootPath}/public/${req.body.fileName}3.mp4`)
   fs.unlinkSync(`${RootPath}/public/${req.body.fileName}`)
   fs.unlinkSync(`${RootPath}/public/${req.body.fileName}3.mp4`)
   fs.unlinkSync(`${RootPath}/public/${req.body.fileName}3.mp4.wav`)
@@ -163,11 +164,12 @@ async function createSubtitle(url) {
       console.log('audio length', audioLength);
       let result = model.stt(audioBuffer);
       const { text } = await translate(result, { to: 'fa' });
-      fs.writeFileSync(`${rootPath}/test.txt`, text);
+      const txt = Date.now() + '.txt'
+      fs.writeFileSync(`${rootPath}/${txt}`, text);
       const wav = Date.now() + '.wav'
       // execSync(`espeak-ng -v fa+m1 -f ${rootPath}/test.txt -s 150 -p 35 -a 110 -w ${rootPath}/public/${wav}`)
       // execSync(`espeak-ng -v fa+m3 -f ${rootPath}/test.txt -s 150 -p 15 -a 110 -w ${rootPath}/public/${wav}`)
-      execSync(`espeak-ng -v fa+f5 -f ${rootPath}/test.txt -s 145 -p 50 -a 95 -w ${rootPath}/public/${wav}`)
+      execSync(`espeak-ng -v fa+f5 -f ${rootPath}/${txt} -s 145 -p 50 -a 95 -w ${rootPath}/public/${wav}`)
 
       resolve({ subtitle: text, audioUrl: wav , audioLength})
     });

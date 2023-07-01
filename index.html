@@ -22,7 +22,7 @@
     <div id="divScroll" style="height: 100px; width: 360px; margin: 0 auto;">
         <p id="p" style="font-size: 16px; line-height: 2; font-weight: 600; padding: 10px; text-align: justify;"></p>
     </div>
-    <audio style="display: flex; align-self: center; " autoplay controls>
+    <audio style="display: flex; align-self: center; " autoplay>
         <source type="audio/wav">
     </audio>
 </body>
@@ -44,7 +44,7 @@
             video.pause()
             const fData = new FormData();
             fData.append('video', document.querySelector('input').files[0]);
-            fData.append('duration', String(Number(duration)));
+            fData.append('duration', duration);
             const { status, data } = await axios.post('http://localhost:4000/upload', fData, { headers: { "Content-Type": "multipart/form-data", } })
             if (status === 200) {
                 console.log('end', 'end');
@@ -55,26 +55,38 @@
                 count = 0
                 audio.src = "http://localhost:4000/" + data.audioUrl
 
-                const { status: status2, data: data2 } = await axios.post('http://localhost:4000/upload2', { fileName: data.videoUrl, part1: data.part1, part2: data.part2, part3: data.part3 }, { headers: { "Content-Type": "application/json", } })
+                const { status: status2, data: data2 } = await axios.post('http://localhost:4000/upload2', { fileName: data.videoUrl, part1: data.part1, part2: data.part2 }, { headers: { "Content-Type": "application/json", } })
                 if (status2 === 200) {
+                    console.log('end2', 'end2');
+
                     int2 = setInterval(async () => {
-                        if ((video.currentTime >= ((video.duration / 3)))) {
+                        if (((video.currentTime >= document.querySelector('audio').duration)) && (video.currentTime >= ((video.duration / 3)))) {
                             document.getElementById('p').innerHTML = data2.text
                             video.play()
                             document.getElementById('divScroll').scrollTo(0, 0)
                             count = 0
+                            setTimeout(() => {
+                                document.getElementById('divScroll').scrollTo(0, 0)
+                                count = 0
+                            }, 3000);
                             audio.src = "http://localhost:4000/" + data2.audioUrl
                             clearInterval(int2)
 
 
-                            const { status: status3, data: data3 } = await axios.post('http://localhost:4000/upload2', { fileName: data.videoUrl, part1: data.part1, part2: data.part2, part3: data.part3 }, { headers: { "Content-Type": "application/json", } })
+                            const { status: status3, data: data3 } = await axios.post('http://localhost:4000/upload3', { fileName: data.videoUrl, part2: data.part2, part3: data.part3 }, { headers: { "Content-Type": "application/json", } })
                             if (status3 === 200) {
+                                console.log('end3', 'end3');
+
                                 int3 = setInterval(() => {
-                                    if ((video.currentTime >= ((video.duration / 2)))) {
+                                    if (((video.currentTime >= document.querySelector('audio').duration)) && (video.currentTime >= ((video.duration / 2)))) {
                                         document.getElementById('p').innerHTML = data3.text
                                         video.play()
                                         document.getElementById('divScroll').scrollTo(0, 0)
                                         count = 0
+                                        setTimeout(() => {
+                                            document.getElementById('divScroll').scrollTo(0, 0)
+                                            count = 0
+                                        }, 3000);
                                         audio.src = "http://localhost:4000/" + data3.audioUrl
                                         clearInterval(int3)
                                     }
@@ -105,7 +117,7 @@
         }, 3100);
     }
 
-    document.querySelector('video').onpause = () => { !document.querySelector('video').ended && document.querySelector('audio').pause(); if (int) clearInterval(int) }
+    document.querySelector('video').onpause = () => { !document.querySelector('video').ended && document.querySelector('audio').pause(); if (int && (count + 20) >= document.getElementById('divScroll').scrollHeight) clearInterval(int) }
 
 </script>
 
