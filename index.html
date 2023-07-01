@@ -32,9 +32,12 @@
     function _play() { document.querySelector('video').play() }
     function _stop() { document.querySelector('video').pause() }
 
-    let count = 20, int, int2, int3
+    let count = 20, int, int2
     async function sendFile(event) {
         event.preventDefault();
+        document.getElementById('p').innerHTML = ''
+        int && clearInterval(int)
+        int2 && clearInterval(int2)
         var fileURL = URL.createObjectURL(document.querySelector('input').files[0]);
         const video = document.querySelector('video')
         const audio = document.querySelector('audio')
@@ -71,28 +74,6 @@
                             }, 3000);
                             audio.src = "http://localhost:4000/" + data2.audioUrl
                             clearInterval(int2)
-
-
-                            const { status: status3, data: data3 } = await axios.post('http://localhost:4000/upload3', { fileName: data.videoUrl, part2: data.part2, part3: data.part3 }, { headers: { "Content-Type": "application/json", } })
-                            if (status3 === 200) {
-                                console.log('end3', 'end3');
-
-                                int3 = setInterval(() => {
-                                    if (((video.currentTime >= document.querySelector('audio').duration)) && (video.currentTime >= ((video.duration / 2)))) {
-                                        document.getElementById('p').innerHTML = data3.text
-                                        video.play()
-                                        document.getElementById('divScroll').scrollTo(0, 0)
-                                        count = 0
-                                        setTimeout(() => {
-                                            document.getElementById('divScroll').scrollTo(0, 0)
-                                            count = 0
-                                        }, 3000);
-                                        audio.src = "http://localhost:4000/" + data3.audioUrl
-                                        clearInterval(int3)
-                                    }
-                                }, 1500);
-                            }
-
                         }
                     }, 1500);
                 }
