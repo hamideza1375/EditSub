@@ -93,8 +93,7 @@
         }, 3100);
     }
 
-    document.querySelector('video').onpause = () => { !document.querySelector('video').ended && document.querySelector('audio').pause();}
-    document.querySelector('audio').onpause = () => { if (int) clearInterval(int) }
+    document.querySelector('video').onpause = () => { document.querySelector('audio').pause(); if (int) clearInterval(int)}
 
 </script>
 
