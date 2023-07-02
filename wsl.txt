@@ -1,0 +1,30 @@
+wsl --shutdown
+netsh winsock reset
+
+
+login in docker
+
+not pip not install libretranslate
+
+
+
+  python main.py
+
+  libretranslate/locales/fa/meta.json
+
+  {
+ "name": "<Language>",
+ "reviewed": true <-- Change this from false to true
+}
+
+
+
+
+
+
+ docker run -p 5000:5000 libretranslate/libretranslate
+
+  docker-compose run libretranslate download-models fa
+
+  docker-compose up
+  docker-compose up -d --build

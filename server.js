@@ -16,8 +16,8 @@ const Wav = require('node-wav');
 const rootPath = require('app-root-path');
 const { execSync } = require('child_process');
 const ffmpegStatic = require('ffmpeg-static');
-const { translate } = require('@vitalets/google-translate-api');
-// const translate = require('./translate');
+// const { translate } = require('@vitalets/google-translate-api');
+const translate = require('./translate');
 
 
 
