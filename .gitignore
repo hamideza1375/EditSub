@@ -1,5 +1,6 @@
 node_modules/
 models/
+public/upload/
 public/*.mp4
 public/*.wav
 public/*.txt
