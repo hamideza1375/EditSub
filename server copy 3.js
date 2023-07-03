@@ -40,61 +40,44 @@ model.enableExternalScorer(scorerPath);
 
 
 const seconder = (secound) => {
+  var countDownDate = (secound * 1000) / 2
+  var countDownDate2 = (secound * 1000)
+  var now = new Date().getTime();
 
-  var countDownDate = (secound * 1000)
-  var countDownDate2 = ((secound + 30) * 1000)
+  var distance = countDownDate;
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  var minutes = Math.floor((countDownDate % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((countDownDate % (1000 * 60)) / 1000);
-
-  var minutes2 = Math.floor((countDownDate2 % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds2 = Math.floor((countDownDate2 % (1000 * 60)) / 1000);
+  var distance2 = countDownDate2;
+  var minutes2 = Math.floor((distance2 % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds2 = Math.floor((distance2 % (1000 * 60)) / 1000);
 
   return { part1: '00:' + String(minutes) + ':' + String(seconds), part2: '00:' + String(minutes2) + ':' + String(seconds2) }
 
 }
 
 app.post('/upload', async (req, res) => {
-  const { part1 } = seconder(30)
-  let s = 0, int
+  const { part1, part2 } = seconder(Number(req.body.duration))
   if (!req.files) return res.status(400).json('err')
   const video = req.files.video;
   const fileName = `${Date.now()}_.${video.name.split('.')[video.name.split('.').length - 1]}`;
   fs.writeFileSync(`${RootPath}/public/${fileName}`, video.data);
 
   execSync(`${ffmpegStatic} -ss 00:00:00 -i ${RootPath}/public/${fileName} -t ${part1} -c copy -f mp4 ${RootPath}/public/${fileName}1.mp4`)
-  const { subtitle, audioUrl } = await createSubtitle(`${RootPath}/public/${fileName}1.mp4`, Date.now())
+  const { subtitle, audioUrl } = await createSubtitle(`${RootPath}/public/${fileName}1.mp4`)
   fs.unlinkSync(`${RootPath}/public/${fileName}1.mp4`)
   fs.unlinkSync(`${RootPath}/public/${fileName}1.mp4.wav`)
-
- int = setInterval(async () => {
-    s += 30
-    const { part1, part2 } = seconder(s)
-    if(req.body.duration > (s + 30)){
-    execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/${fileName} -t ${part2} -c copy -f mp4 ${RootPath}/public/${fileName}.${s}.mp4`)
-    await createSubtitle(`${RootPath}/public/${fileName}.${s}.mp4`, audioUrl + '.' + s)
-    fs.existsSync(`${RootPath}/public/${fileName}.${s - 30}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s - 30}.mp4`)
-    fs.existsSync(`${RootPath}/public/${fileName}.${s - 30}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s - 30}.mp4.wav`)
-   }
-   else{
-     const { part2 } = seconder(req.body.duration - 30)
-    if(!(s > req.body.duration)){
-    execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/${fileName} -t ${part2} -c copy -f mp4 ${RootPath}/public/${fileName}.${s}.mp4`)
-    await createSubtitle(`${RootPath}/public/${fileName}.${s}.mp4`, audioUrl + '.' + s)
-    fs.existsSync(`${RootPath}/public/${fileName}.${s}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s}.mp4`)
-    fs.existsSync(`${RootPath}/public/${fileName}.${s}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s}.mp4.wav`)
-    fs.existsSync(`${RootPath}/public/${fileName}.${30}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${30}.mp4`)
-    fs.existsSync(`${RootPath}/public/${fileName}.${30}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${30}.mp4.wav`)
-
-    fs.unlinkSync(`${RootPath}/public/${fileName}`)
-  }
-  }
-    if(s >= req.body.duration ) clearInterval(int)
-  }, 2000);
-
-  res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName, part1 })
+  res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName, part1, part2 })
 })
 
+app.post('/upload2', async (req, res) => {
+  execSync(`${ffmpegStatic} -ss ${req.body.part1} -i ${RootPath}/public/${req.body.fileName} -t ${req.body.part2} -c copy -f mp4 ${RootPath}/public/${req.body.fileName}2.mp4`)
+  const { subtitle, audioUrl, audioLength } = await createSubtitle(`${RootPath}/public/${req.body.fileName}2.mp4`)
+  fs.unlinkSync(`${RootPath}/public/${req.body.fileName}`)
+  fs.unlinkSync(`${RootPath}/public/${req.body.fileName}2.mp4`)
+  fs.unlinkSync(`${RootPath}/public/${req.body.fileName}2.mp4.wav`)
+  res.status(200).json({ text: subtitle, audioUrl, audioLength })
+})
 
 const port = 4000
 app.listen(port, (err) => { console.log(`App Listen to port ${port}`) })
@@ -105,7 +88,7 @@ app.listen(port, (err) => { console.log(`App Listen to port ${port}`) })
 
 
 
-async function createSubtitle(url, fileName) {
+async function createSubtitle(url) {
   return new Promise((resolve, reject) => {
 
     let audioFile = transcribeLocalVideo(url)
@@ -155,9 +138,9 @@ async function createSubtitle(url, fileName) {
       const { text } = await translate(result, { to: 'fa' });
       // const { text } = await translate(result, { to: 'fa' })
 
-      const txt = fileName + '.txt'
+      const txt = Date.now() + '.txt'
       fs.writeFileSync(`${rootPath}/public/${txt}`, text);
-      const wav = fileName + '.wav'
+      const wav = Date.now() + '.wav'
       // execSync(`espeak-ng -v fa+m3 -f ${rootPath}/test.txt -s 150 -p 15 -a 110 -w ${rootPath}/public/${wav}`)
       execSync(`espeak-ng -v fa+f5 -f ${rootPath}/public/${txt} -s 144 -p 50 -a 90 -w ${rootPath}/public/${wav}`)
 
