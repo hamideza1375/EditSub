@@ -51,6 +51,7 @@ const seconder = (secound) => {
 }
 var time = 1000
 app.post('/upload', async (req, res) => {
+  time = 1000
   let s = 0, int
   if (!req.files) return res.status(400).json('err')
   const video = req.files.video;
