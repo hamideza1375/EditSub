@@ -16,8 +16,8 @@ const Wav = require('node-wav');
 const rootPath = require('app-root-path');
 const { execSync } = require('child_process');
 const ffmpegStatic = require('ffmpeg-static');
-// const { translate } = require('@vitalets/google-translate-api');
-const translate = require('./translate');
+const { translate } = require('@vitalets/google-translate-api');
+// const translate = require('./translate');
 
 
 
@@ -42,42 +42,60 @@ model.enableExternalScorer(scorerPath);
 const seconder = (secound) => {
 
   var countDownDate = (secound * 1000)
+  var countDownDate2 = ((secound + 30) * 1000)
 
   var minutes = Math.floor((countDownDate % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((countDownDate % (1000 * 60)) / 1000);
 
-  return { part1: '00:' + String(minutes) + ':' + String(seconds)}
+  var minutes2 = Math.floor((countDownDate2 % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds2 = Math.floor((countDownDate2 % (1000 * 60)) / 1000);
+
+  return { part1: '00:' + String(minutes) + ':' + String(seconds), part2: '00:' + String(minutes2) + ':' + String(seconds2) }
 
 }
-var time = 1000
+
 app.post('/upload', async (req, res) => {
+  const { part1 } = seconder(30)
   let s = 0, int
   if (!req.files) return res.status(400).json('err')
   const video = req.files.video;
   const fileName = `${Date.now()}_.${video.name.split('.')[video.name.split('.').length - 1]}`;
   fs.writeFileSync(`${RootPath}/public/${fileName}`, video.data);
 
-  execSync(`${ffmpegStatic} -ss 00:00:00 -i ${RootPath}/public/${fileName} -t 00:01:00 -c copy -f mp4 ${RootPath}/public/${fileName}1.mp4`)
+  execSync(`${ffmpegStatic} -ss 00:00:00 -i ${RootPath}/public/${fileName} -t ${part1} -c copy -f mp4 ${RootPath}/public/${fileName}1.mp4`)
   const { subtitle, audioUrl } = await createSubtitle(`${RootPath}/public/${fileName}1.mp4`, Date.now())
   fs.unlinkSync(`${RootPath}/public/${fileName}1.mp4`)
   fs.unlinkSync(`${RootPath}/public/${fileName}1.mp4.wav`)
 
-  int = setInterval(async () => {
-    s += 60
-    time = 30000
-    if (req.body.duration > (s + 60)) {
-      const { part1 } = seconder(s)
-      execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/${fileName} -t 00:01:00 -c copy -f mp4 ${RootPath}/public/${fileName}.${s}.mp4`)
-      await createSubtitle(`${RootPath}/public/${fileName}.${s}.mp4`, audioUrl + '.' + s)
-      fs.existsSync(`${RootPath}/public/${fileName}.${s - 60}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s - 60}.mp4`)
-      fs.existsSync(`${RootPath}/public/${fileName}.${s - 60}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s - 60}.mp4.wav`)
-    }
-     if(req.body.duration < (s + 60)) clearInterval(int)
-    time = 30000
-  }, time);
-  time = 30000
+ int = setInterval(async () => {
+    s += 30
+    const { part1, part2 } = seconder(s)
+    console.log('aaaaaaa',{ part1, part2 });
+    if(req.body.duration > (s + 30)){
+    execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/${fileName} -t ${part2} -c copy -f mp4 ${RootPath}/public/${fileName}.${s}.mp4`)
+    await createSubtitle(`${RootPath}/public/${fileName}.${s}.mp4`, audioUrl + '.' + s)
+    fs.existsSync(`${RootPath}/public/${fileName}.${s - 30}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s - 30}.mp4`)
+    fs.existsSync(`${RootPath}/public/${fileName}.${s - 30}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s - 30}.mp4.wav`)
+   }
+  //  else{
+  //    const { part1 } = seconder(req.body.duration )
+  //   console.log('bbbbbb',{ part2, part1 });
 
-  res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName })
+  //   if(!(s > req.body.duration)){
+  //   execSync(`${ffmpegStatic} -ss ${part2} -i ${RootPath}/public/${fileName} -t ${part1} -c copy -f mp4 ${RootPath}/public/${fileName}.${s}.mp4`)
+  //   await createSubtitle(`${RootPath}/public/${fileName}.${s}.mp4`, audioUrl + '.' + s)
+  //   fs.existsSync(`${RootPath}/public/${fileName}.${s}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s}.mp4`)
+  //   fs.existsSync(`${RootPath}/public/${fileName}.${s}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s}.mp4.wav`)
+  //   fs.existsSync(`${RootPath}/public/${fileName}.${30}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${30}.mp4`)
+  //   fs.existsSync(`${RootPath}/public/${fileName}.${30}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${30}.mp4.wav`)
+
+  //   fs.unlinkSync(`${RootPath}/public/${fileName}`)
+  // }
+  // }
+    if(s >= req.body.duration ) clearInterval(int)
+  }, 2000);
+
+  res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName, part1 })
 })
 
 
