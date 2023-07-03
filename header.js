@@ -1,8 +1,0 @@
-// appmid
-module.exports = (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, PATCH, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-};
-  // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');

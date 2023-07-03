@@ -2,10 +2,11 @@ const fs = require("fs");
 const express = require("express");
 const app = express();
 const fileUpload = require("express-fileupload");
-const setHeaders = require("./header");
+const setHeaders = require("./middleware/header");
 const RootPath = require("app-root-path");
 
 //! download models
+//! install Sox
 //! Sox set to envaironment
 //! npx node@14.0.0 ./index.js
 const DeepSpeech = require('deepspeech');
@@ -17,7 +18,7 @@ const rootPath = require('app-root-path');
 const { execSync } = require('child_process');
 const ffmpegStatic = require('ffmpeg-static');
 // const { translate } = require('@vitalets/google-translate-api');
-const translate = require('./translate');
+const translate = require('./middleware/translate');
 
 
 
@@ -156,7 +157,8 @@ async function createSubtitle(url, fileName) {
       fs.writeFileSync(`${rootPath}/public/upload/${txt}`, text);
       const wav = fileName + '.wav'
       // execSync(`espeak-ng -v fa+m3 -f ${rootPath}/test.txt -s 150 -p 15 -a 110 -w ${rootPath}/public/upload/${wav}`)
-      execSync(`espeak-ng -v fa+f5 -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 90 -w ${rootPath}/public/upload/${wav}`)
+      // execSync(`espeak-ng -v fa+f5 -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 90 -w ${rootPath}/public/upload/${wav}`)
+      execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 90 -w ${rootPath}/public/upload/${wav}`)
 
       resolve({ subtitle: text, audioUrl: wav, audioLength })
     });

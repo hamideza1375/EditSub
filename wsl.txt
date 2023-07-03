@@ -1,30 +1,19 @@
-wsl --shutdown
-netsh winsock reset
 
 
-login in docker
+ download argos-translate en-fa
+ pip install libretranslate
 
-not pip not install libretranslate
+ python main.py
+ 
+ or
 
-
-
-  python main.py
-
-  libretranslate/locales/fa/meta.json
-
-  {
- "name": "<Language>",
- "reviewed": true <-- Change this from false to true
-}
+ libretranslate --load-only en,fa
 
 
 
 
-
-
- docker run -p 5000:5000 libretranslate/libretranslate
-
-  docker-compose run libretranslate download-models fa
-
-  docker-compose up
+  wsl --shutdown
+  netsh winsock reset
+  login in docker
+  docker run -p 5000:5000 libretranslate/libretranslate
   docker-compose up -d --build
