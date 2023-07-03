@@ -46,7 +46,7 @@ const seconder = (secound) => {
   var minutes = Math.floor((countDownDate % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((countDownDate % (1000 * 60)) / 1000);
 
-  return { part1: '00:' + String(minutes) + ':' + String(seconds)}
+  return { part1: '00:' + String(minutes) + ':' + String(seconds) }
 
 }
 var time = 1000
@@ -65,18 +65,25 @@ app.post('/upload', async (req, res) => {
 
   int = setInterval(async () => {
     s += 60
-    time = 30000
-    if (req.body.duration > (s + 60)) {
+    time = 40000
+    if (req.body.duration > (s)) {
       const { part1 } = seconder(s)
       execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/${fileName} -t 00:01:00 -c copy -f mp4 ${RootPath}/public/${fileName}.${s}.mp4`)
       await createSubtitle(`${RootPath}/public/${fileName}.${s}.mp4`, audioUrl + '.' + s)
       fs.existsSync(`${RootPath}/public/${fileName}.${s - 60}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s - 60}.mp4`)
       fs.existsSync(`${RootPath}/public/${fileName}.${s - 60}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s - 60}.mp4.wav`)
     }
-     if(req.body.duration < (s + 60)) clearInterval(int)
-    time = 30000
+
+    if (req.body.duration < (s)) {
+      clearInterval(int)
+      fs.existsSync(`${RootPath}/public/${fileName}.${s}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s}.mp4`)
+      fs.existsSync(`${RootPath}/public/${fileName}.${s}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${s}.mp4.wav`)
+      fs.existsSync(`${RootPath}/public/${fileName}.${30}.mp4`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${30}.mp4`)
+      fs.existsSync(`${RootPath}/public/${fileName}.${30}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/${fileName}.${30}.mp4.wav`)
+      fs.existsSync(`${RootPath}/public/${fileName}`) && fs.unlinkSync(`${RootPath}/public/${fileName}`)
+    }
   }, time);
-  time = 30000
+  time = 40000
 
   res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName })
 })
