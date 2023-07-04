@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="./client/manifest.json" />
+    <link rel="manifest" href="/manifest.json" />
 
     <title>Document</title>
 </head>
@@ -46,13 +46,13 @@
         <source type="audio/wav">
     </audio>
 </body>
-<script src="./client/axios.js"></script>
+<script src="/axios.js"></script>
 <script>
 
 
     let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    // const localhost = 'http://localhost:4000'
-    const localhost = 'http://192.168.104.240:4000'
+    const localhost = 'http://localhost:4000'
+    // const localhost = 'http://192.168.104.240:4000'
 
 
 
@@ -154,6 +154,7 @@
                                     jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
                                     document.getElementById(String(i)).style.opacity = 1
                                     document.getElementById(String(arr[i] / 60)).style.opacity = 1
+                                    setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
                                     if (s >= video.duration) clearInterval(int2)
                                 }
                             }
@@ -223,6 +224,6 @@
     }
 
 </script>
-<script src="./client/app.js" defer></script>
+<script src="/app.js" defer></script>
 
 </html>
