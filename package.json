@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx node@15.0.0 server.js"
+    "start": "npx node@15.0.0 server.js",
+    "libre":"libretranslate --load-only en,fa"
   },
   "keywords": [],
   "author": "",

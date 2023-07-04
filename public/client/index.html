@@ -9,8 +9,8 @@
 <body dir="rtl" style="display: flex;flex-direction: column;">
     <form style="display: flex;flex-direction: row; justify-content: center;" onsubmit="sendFile(event)">
         <div style="display: flex;flex-direction: row; justify-content: center;  height: 30px;">
-            <div style="border: 1px solid black; width: 150px; display: flex; align-items: center;" >
-                <p style="position: absolute; margin-right: 7px;font-size: 13px;" >انتخاب از گالری</p>
+            <div style="border: 1px solid black; width: 150px; display: flex; align-items: center;">
+                <p style="position: absolute; margin-right: 7px;font-size: 13px;">انتخاب از گالری</p>
                 <input style="opacity: 0; height: 100%; width: 100%;" accept="video/*" type="file" />
             </div>
 
@@ -19,11 +19,18 @@
 
         <div style="display: flex;flex-direction: row; justify-content: center; margin-right: 50px;">
             <h2 onclick="_stop()" style="margin: 0 15px; cursor: pointer;">⏸</h2>
-            <h2 onclick="_play()" style="margin: 4px 15px 0; cursor: pointer; background-color: rgb(69, 108, 238); height: 26px; width: 23px; border: 1px solid black; padding-right: 1px;">▶</h2>
+            <h2 onclick="_play()"
+                style="margin: 4px 15px 0; cursor: pointer; background-color: rgb(69, 108, 238); height: 26px; width: 23px; border: 1px solid black; padding-right: 1px;">
+                ▶</h2>
         </div>
     </form>
 
-    <video controls
+    <div id="part" dir="ltr"
+        style="justify-content: center;margin-right: 10px; width: calc(100% - 20px);height: 40px;border: 1px solid black;display: flex;flex-direction: row;">
+
+    </div>
+
+    <video
         style="margin-right: 10px; width: calc(100% - 20px); height: calc(100% - 175px); object-fit: fill; resize: vertical;"
         muted aria-readonly="false">
         <source type="video/mp4" />
@@ -42,13 +49,17 @@
 
 
     let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    // const localhost = 'http://localhost:4000'
-    const localhost = 'http://192.168.90.240:4000'
+    const localhost = 'http://localhost:4000'
+    // const localhost = 'http://192.168.247.240:4000'
+
+
 
 
     let count = 20, int, int2, int3, audio1, audio2, playCount = 0, text1, text2, started, s = 0, s2 = 0, a
 
     function _play() { document.getElementById('p').innerHTML && document.querySelector('video').play() }
+    // function _stop() { console.log(document.querySelector('video').duration / 60); }
+    // function _stop() { document.querySelector('video').currentTime = 1 * 60 }
     function _stop() { document.getElementById('p').innerHTML && document.querySelector('video').pause() }
 
     async function sendFile(event) {
@@ -62,7 +73,51 @@
         const audio = document.querySelector('audio')
         video.src = fileURL
         started = false
+
+
+
+
         video.ondurationchange = async function () {
+
+            const videoPart = document.querySelector('video').duration / 60
+            for (let i = 0; i <= videoPart; i++) {
+                const div = document.createElement("div");
+                const para = document.createElement("p");
+                para.innerText = i;
+                para.style.display = 'flex';
+                para.style.margin = 'auto auto';
+                div.style.display = 'flex';
+                div.style.flex = 1;
+                div.style.opacity = .4;
+                div.id = String(i);
+                div.style.border = '1px solid black';
+                div.onclick = () => {
+                    if(document.getElementById('p').innerHTML){
+                    document.querySelector('video').currentTime = (i)
+                    if (i === 0) {
+                        document.getElementById('divScroll').scrollTo(0, 0)
+                        count = 0
+                        setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
+                        if (audio1) document.querySelector('audio').src = `${localhost}/upload/` + audio1
+                        document.getElementById('p').innerHTML = text1
+                    }
+                    else {
+                        var jsonFile = new XMLHttpRequest();
+                        jsonFile.open("GET", `${localhost}/upload/` + audio1 + '.' + (i * 60) + '.txt', true);
+                        jsonFile.send();
+                        if(jsonFile.status != 404){
+                        setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
+                        document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + (i * 60) + '.wav'
+                        jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
+                  }
+                    }
+}
+                };
+                div.appendChild(para)
+                document.getElementById('part').appendChild(div)
+            }
+
+
             if (!started) {
                 started = true
                 const duration = video.duration
@@ -123,7 +178,7 @@
 
             int3 = setInterval(() => {
                 for (let i in arr) {
-                    if ((document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 3)) ) {
+                    if ((document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 3))) {
                         console.log('aaaa', arr[i]);
                         s2 = arr[i]
                         document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.wav'
@@ -131,8 +186,10 @@
                         var jsonFile = new XMLHttpRequest();
                         jsonFile.open("GET", url, true);
                         jsonFile.send();
+                        if(jsonFile.status != 404){
                         jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
                         if (s2 >= video) clearInterval(int3)
+                    }
                     }
                 }
             }, 3000);
