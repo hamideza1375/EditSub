@@ -49,8 +49,8 @@
 
 
     let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    // const localhost = 'http://localhost:4000'
-    const localhost = 'http://192.168.104.240:4000'
+    const localhost = 'http://localhost:4000'
+    // const localhost = 'http://192.168.104.240:4000'
 
 
 
@@ -58,8 +58,6 @@
     let count = 20, int, int2, int3, audio1, audio2, playCount = 0, text1, text2, started, s = 0, s2 = 0, a
 
     function _play() { document.getElementById('p').innerHTML && document.querySelector('video').play() }
-    // function _stop() { console.log(document.querySelector('video').duration / 60); }
-    // function _stop() { document.querySelector('video').currentTime = 1 * 60 }
     function _stop() { document.getElementById('p').innerHTML && document.querySelector('video').pause() }
 
     async function sendFile(event) {
