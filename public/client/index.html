@@ -32,7 +32,7 @@
     </div>
 
     <video
-        style="margin-right: 10px; width: calc(100% - 20px); height: calc(100% - 175px); object-fit: fill; resize: vertical;"
+        style="margin-right: 10px; width: calc(100% - 20px); height: calc(100% - 200px); object-fit: fill; resize: vertical;"
         muted aria-readonly="false">
         <source type="video/mp4" />
     </video>
@@ -87,33 +87,33 @@
                 div.style.opacity = .2;
                 div.id = String(i);
                 div.style.border = '1px solid black';
-                div.onclick = () => {
-                    if(document.getElementById('p').innerHTML){
-                    document.querySelector('video').currentTime = (i)
-                    if (i === 0) {
-                        document.getElementById('divScroll').scrollTo(0, 0)
-                        count = 0
-                        setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
-                        if (audio1) document.querySelector('audio').src = `${localhost}/upload/` + audio1
-                        document.getElementById('p').innerHTML = text1
-                        document.querySelector('video').play()
-                    }
-                    else {
-                        var jsonFile = new XMLHttpRequest();
-                        jsonFile.open("GET", `${localhost}/upload/` + audio1 + '.' + (i * 60) + '.txt', true);
-                        jsonFile.send();
-                        if(jsonFile.status != 404){
-                        document.querySelector('video').play()
-                        setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
-                        document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + (i * 60) + '.wav'
-                        jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
-                  }
-                    }
-                };
+                div.onclick = (e) => {
+                    if (e.target.style.opacity == 1) {
+                        document.querySelector('video').currentTime = (i)
+                        if (i === 0) {
+                            document.getElementById('divScroll').scrollTo(0, 0)
+                            count = 0
+                            setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
+                            if (audio1) document.querySelector('audio').src = `${localhost}/upload/` + audio1
+                            document.getElementById('p').innerHTML = text1
+                            document.querySelector('video').play()
+                        }
+                        else {
+                            var jsonFile = new XMLHttpRequest();
+                            jsonFile.open("GET", `${localhost}/upload/` + audio1 + '.' + (i * 60) + '.txt', true);
+                            jsonFile.send();
+                            if (jsonFile.status != 404) {
+                                document.querySelector('video').play()
+                                setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
+                                document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + (i * 60) + '.wav'
+                                jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
+                            }
+                        }
+                    };
+                }
                 div.appendChild(para)
                 document.getElementById('part').appendChild(div)
             }
-
             if (!started) {
                 started = true
                 const duration = video.duration
@@ -179,26 +179,26 @@
 
         }
 
-            int3 = setInterval(() => {
-                for (let i in arr) {
-                    if ((document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 3))) {
-                        console.log('aaaa', arr[i]);
-                        s2 = arr[i]
-                        document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.wav'
-                        var url = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.txt'
-                        var jsonFile = new XMLHttpRequest();
-                        jsonFile.open("GET", url, true);
-                        jsonFile.send();
-                        if(jsonFile.status != 404){
+        int3 = setInterval(() => {
+            for (let i in arr) {
+                if ((document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 3))) {
+                    console.log('aaaa', arr[i]);
+                    s2 = arr[i]
+                    document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.wav'
+                    var url = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.txt'
+                    var jsonFile = new XMLHttpRequest();
+                    jsonFile.open("GET", url, true);
+                    jsonFile.send();
+                    if (jsonFile.status != 404) {
                         setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
                         jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
                         document.getElementById(String(i)).style.opacity = 1
                         document.getElementById(String(arr[i] / 60)).style.opacity = 1
                         if (s2 >= video) clearInterval(int3)
                     }
-                    }
                 }
-            }, 3000);
+            }
+        }, 3000);
 
 
         playCount += 1
