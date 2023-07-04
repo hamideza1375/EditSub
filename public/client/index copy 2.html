@@ -21,8 +21,9 @@
         <div style="display: flex;flex-direction: row; justify-content: center; margin-right: 50px;">
             <h2 onclick="_stop()" style="margin: 0 15px; cursor: pointer;">⏸</h2>
             <h2 onclick="_play()"
-                style="margin: 4px 15px 0; cursor: pointer; background-color: rgb(69, 108, 238); height: 26px; width: 23px; border: 1px solid black; padding-right: 1px;">
-                ▶</h2>
+                style="margin: 0px 15px 0; cursor: pointer;">
+                &#9654;&#65039;
+            </h2>
         </div>
     </form>
 
@@ -87,17 +88,17 @@
 
                 const para = document.createElement("p");               
                 para.innerText = i;
-                para.style.overflow = 'hidden';
                 para.style.display = 'flex';
-                para.style.justifyContent = 'center';
                 para.style.margin = 'auto auto';
                 div.style.display = 'flex';
+                div.style.overflow = 'hidden';
+                div.style.justifyContent = 'center';
                 div.style.flex = 1;
                 div.style.opacity = .5;
                 div.id = String(i);
                 div.style.border = '1px solid black';
                 div.onclick = (e) => {
-                    if(e.target.style.opacity == 1){
+                    if(document.getElementById('p').innerHTML){
                     document.querySelector('video#mainVideo').currentTime = (i)
                     if (i === 0) {
                         document.getElementById('divScroll').scrollTo(0, 0)
