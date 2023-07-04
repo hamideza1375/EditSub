@@ -161,8 +161,12 @@
                                     jsonFile.send();
                                     setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
                                     jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
+                                    document.getElementById(String(i)).style.opacity = 1
                                     document.getElementById(String(arr[i] / 60)).style.opacity = 1
+                                    
+                                    document.getElementById(String('video' + i)).style.opacity = 1
                                     document.getElementById(String('video' + (arr[i] / 60))).style.opacity = 1
+                                    
                                     if (s >= video.duration) clearInterval(int2)
                                 }
                             }
@@ -206,8 +210,12 @@
                         if(jsonFile.status != 404){
                         setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
                         jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
+                        document.getElementById(String(i)).style.opacity = 1
                         document.getElementById(String(arr[i] / 60)).style.opacity = 1
-                        document.getElementById(String('video' + (arr[i] / 60))).style.opacity = 1
+                        
+                        document.getElementById(String('video' + i)).style.opacity = 1
+                                    document.getElementById(String('video' + (arr[i] / 60))).style.opacity = 1
+                        
                         if (s2 >= video) clearInterval(int3)
                     }
                     }
