@@ -70,7 +70,7 @@ app.post('/upload', async (req, res) => {
 
   int = setInterval(async () => {
     s += 60
-    time = 38000
+    time = 40000
     if (req.body.duration > (s)) {
       const { part1 } = seconder(s)
       execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/upload/${fileName} -t 00:01:00 -c copy -f mp4 ${RootPath}/public/upload/${fileName}.${s}.mp4`)
@@ -88,7 +88,7 @@ app.post('/upload', async (req, res) => {
       fs.existsSync(`${RootPath}/public/upload/${fileName}`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}`)
     }
   }, time);
-  time = 38000
+  time = 40000
 
   res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName })
 })
