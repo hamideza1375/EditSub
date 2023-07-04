@@ -145,6 +145,9 @@
                     audio.src = `${localhost}/upload/` + data.audioUrl
                     audio1 = data.audioUrl
                     document.getElementById(String(0)).style.opacity = 1
+                    document.getElementById(String('video' + 0)).style.opacity = 1
+
+
                     int2 = setInterval(() => {
                         for (let i in arr) {
                             if (video.currentTime >= arr[i] && video.currentTime < (arr[i] + 60) && s < arr[i]) {
@@ -214,7 +217,7 @@
                         document.getElementById(String(arr[i] / 60)).style.opacity = 1
                         
                         document.getElementById(String('video' + i)).style.opacity = 1
-                                    document.getElementById(String('video' + (arr[i] / 60))).style.opacity = 1
+                        document.getElementById(String('video' + (arr[i] / 60))).style.opacity = 1
                         
                         if (s2 >= video) clearInterval(int3)
                     }
