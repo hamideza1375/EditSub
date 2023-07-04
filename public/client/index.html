@@ -121,7 +121,7 @@
             if (audio1) document.querySelector('audio').src = `${localhost}/upload/` + audio1
             document.getElementById('p').innerHTML = text1
 
-            setInterval(() => {
+            int3 = setInterval(() => {
                 for (let i in arr) {
                     if ((document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video').currentTime >= arr[i] && document.querySelector('video').currentTime < (arr[i] + 3)) ) {
                         console.log('aaaa', arr[i]);
