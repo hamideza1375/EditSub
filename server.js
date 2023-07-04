@@ -42,7 +42,7 @@ model.enableExternalScorer(scorerPath);
 
 
 app.get('/t',(req,res)=>{
-  res.sendFile(`${RootPath}/public/index.html`)
+  res.sendFile(`${RootPath}/public/client/index.html`)
 })
 
 
