@@ -1,6 +1,7 @@
 node_modules/
 models/
 db/
+db/sessions/
 public/upload/
 public/*.mp4
 public/*.wav
