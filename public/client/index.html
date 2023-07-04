@@ -50,8 +50,8 @@
 
 
     let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    // const localhost = 'http://localhost:4000'
-    const localhost = 'http://192.168.104.240:4000'
+    const localhost = 'http://localhost:4000'
+    // const localhost = 'http://192.168.104.240:4000'
 
 
 
@@ -73,11 +73,8 @@
         video.src = fileURL
         started = false
 
-
-
-
         video.ondurationchange = async function () {
-
+            document.getElementById('part').innerHTML = ''
             const videoPart = document.querySelector('video').duration / 60
             for (let i = 0; i <= videoPart; i++) {
                 const div = document.createElement("div");
@@ -112,12 +109,10 @@
                         jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 0); count = 0 }
                   }
                     }
-}
                 };
                 div.appendChild(para)
                 document.getElementById('part').appendChild(div)
             }
-
 
             if (!started) {
                 started = true
