@@ -131,7 +131,7 @@
                             int2 && clearInterval(int2)
                             int3 = setInterval(() => {
                                 for (let i in arr) {
-                                    if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 1))) {
+                                    if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 3))) {
                                         s2 = arr[i]
                                         document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.wav'
                                         var url = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.txt'
@@ -231,7 +231,7 @@
 
             int3 = setInterval(() => {
                 for (let i in arr) {
-                    if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 1))) {
+                    if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 3))) {
                         s2 = arr[i]
                         document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.wav'
                         var url = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.txt'
