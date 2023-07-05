@@ -132,7 +132,7 @@
                             int2 && clearInterval(int2)
                             int3 = setInterval(() => {
                                 for (let i in arr) {
-                                    if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s3 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 3))) {
+                                    if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s3 < arr[i])) {
                                         s3 = arr[i]
                                         document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.wav'
                                         var url = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.txt'
