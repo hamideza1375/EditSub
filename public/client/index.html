@@ -152,7 +152,17 @@
                                     }
                                 }
                             }, 3000);
-
+                            count = 0
+                            setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 3); count += 3 }, 2500);
+                            if (int) clearInterval(int)
+                            oldCurrentTime = -1
+                            int = setInterval(() => {
+                                if (document.querySelector('video#mainVideo').currentTime > oldCurrentTime) {
+                                    oldCurrentTime = document.querySelector('video#mainVideo').currentTime
+                                    document.getElementById('divScroll').scrollTo(0, count)
+                                }
+                                if (count >= document.getElementById('divScroll').scrollHeight) { clearInterval(int) }
+                            }, 2500);
 
                         };
                     }
@@ -272,8 +282,8 @@
 
     document.querySelector('video#mainVideo').onpause = () => {
         !document.querySelector('video#mainVideo').ended && document.querySelector('audio').pause();
-        // if (document.querySelector('video#mainVideo').ended) setTimeout(() => { if (int) clearInterval(int) }, 10000)
-        // else if (int) clearInterval(int)
+        if (document.querySelector('video#mainVideo').ended) setTimeout(() => { if (int) clearInterval(int) }, 10000)
+        else if (int) clearInterval(int)
     }
 
 </script>
