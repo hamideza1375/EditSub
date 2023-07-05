@@ -8,8 +8,8 @@
 </head>
 
 <body dir="rtl" style="display: flex;flex-direction: column;">
-    <form style="display: flex;flex-direction: row; justify-content: center;" onsubmit="sendFile(event)">
-        <div style="display: flex;flex-direction: row; justify-content: center;  height: 30px;">
+    <form style="display: flex;flex-direction: row; justify-content: center; height:20px;" onsubmit="sendFile(event)">
+        <div style="display: flex;flex-direction: row; justify-content: space-between;  height: 30px;margin-right: 10px;">
             <div style="border: 1px solid black; width: 150px; display: flex; align-items: center;">
                 <p style="position: absolute; margin-right: 7px;font-size: 13px;">انتخاب از گالری</p>
                 <input style="opacity: 0; height: 100%; width: 100%;" accept="video/*" type="file" />
@@ -18,11 +18,9 @@
             <input type="submit" value="ارسال" />
         </div>
 
-        <div style="display: flex;flex-direction: row; justify-content: center; margin-right: 50px;">
+        <div style="margin-left: auto;display: flex;flex-direction: row; justify-content: center; flex:1">
             <h2 onclick="_stop()" style="margin: 0 15px; cursor: pointer;">⏸</h2>
-            <h2 onclick="_play()" style="margin: 0px 15px 0; cursor: pointer;">
-                &#9654;&#65039;
-            </h2>
+            <h2 onclick="_play()" style="margin: 0px 15px 0; cursor: pointer;">&#9654;&#65039;</h2>
         </div>
     </form>
 
