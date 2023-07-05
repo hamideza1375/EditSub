@@ -56,7 +56,7 @@
 
 
 
-    let count = 20, int, int2, int3, audio1, audio2, playCount = 0, text1, text2, started, s = 0, s2 = 0, a, oldCurrentTime = -1
+    let count = 20, int, int2, int3, audio1, audio2, playCount = 0, text1, text2, started, s = 0, s2, s3 = 0, a, oldCurrentTime = -1
 
     function _play() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').play() }
     function _stop() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').pause() }
@@ -131,8 +131,8 @@
                             int2 && clearInterval(int2)
                             int3 = setInterval(() => {
                                 for (let i in arr) {
-                                    if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s2 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 3))) {
-                                        s2 = arr[i]
+                                    if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s3 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 3))) {
+                                        s3 = arr[i]
                                         document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.wav'
                                         var url = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.txt'
                                         var jsonFile = new XMLHttpRequest();
@@ -147,7 +147,7 @@
                                             document.getElementById(String('video' + i)).style.opacity = 1
                                             document.getElementById(String('video' + (arr[i] / 60))).style.opacity = 1
 
-                                            if (s2 >= document.querySelector('video#mainVideo').duration) clearInterval(int3)
+                                            if (s3 >= document.querySelector('video#mainVideo').duration) clearInterval(int3)
                                         }
                                     }
                                 }
