@@ -158,7 +158,7 @@ async function createSubtitle(url, fileName) {
       const wav = fileName + '.wav'
       // execSync(`espeak-ng -v fa+m3 -f ${rootPath}/test.txt -s 150 -p 15 -a 110 -w ${rootPath}/public/upload/${wav}`)
       // execSync(`espeak-ng -v fa+f5 -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 90 -w ${rootPath}/public/upload/${wav}`)
-      execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 90 -w ${rootPath}/public/upload/${wav}`)
+      execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 100 -w ${rootPath}/public/upload/${wav}`)
 
       resolve({ subtitle: text, audioUrl: wav, audioLength })
     });
