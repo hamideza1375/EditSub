@@ -50,13 +50,13 @@
 
 
     let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    const localhost = 'http://localhost:4000'
-    // const localhost = 'http://192.168.164.240:4000'
+    // const localhost = 'http://localhost:4000'
+    const localhost = 'http://192.168.248.240:4000'
 
 
 
 
-    let count = 20, int, int2, int3, audio1, audio2, playCount = 0, text1, text2, started, s = 0, s2 = 0, a
+    let count = 20, int, int2, int3, audio1, audio2, playCount = 0, text1, text2, started, s = 0, s2 = 0, a, oldCurrentTime = -1
 
     function _play() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').play() }
     function _stop() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').pause() }
@@ -216,6 +216,7 @@
         count += 20
     }
 
+
     document.querySelector('video#mainVideo').onplay = () => {
         document.getElementById('divScroll').style.overflowY = 'scroll'
         const video = document.querySelector('video#mainVideo').duration
@@ -261,7 +262,10 @@
         count = document.getElementById('divScroll').scrollTop
         setTimeout(() => { count += 1 }, 2000);
         int = setInterval(() => {
-            document.getElementById('divScroll').scrollTo(0, count)
+            if (document.querySelector('video#mainVideo').currentTime > oldCurrentTime) {
+                oldCurrentTime = document.querySelector('video#mainVideo').currentTime
+                document.getElementById('divScroll').scrollTo(0, count)
+            }
             if (count >= document.getElementById('divScroll').scrollHeight) { clearInterval(int) }
         }, 2500);
     }
