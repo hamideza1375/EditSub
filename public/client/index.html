@@ -272,8 +272,8 @@
 
     document.querySelector('video#mainVideo').onpause = () => {
         !document.querySelector('video#mainVideo').ended && document.querySelector('audio').pause();
-        if (document.querySelector('video#mainVideo').ended) setTimeout(() => { if (int) clearInterval(int) }, 10000)
-        else if (int) clearInterval(int)
+        // if (document.querySelector('video#mainVideo').ended) setTimeout(() => { if (int) clearInterval(int) }, 10000)
+        // else if (int) clearInterval(int)
     }
 
 </script>
