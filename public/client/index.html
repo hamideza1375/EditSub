@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="client/v.css">
 
     <title>Document</title>
 </head>
 
 <body dir="rtl" style="display: flex;flex-direction: column;">
     <form style="display: flex;flex-direction: row; justify-content: center; height:20px;" onsubmit="sendFile(event)">
-        <div style="display: flex;flex-direction: row; justify-content: space-between;  height: 30px;margin-right: 10px;">
+        <div
+            style="display: flex;flex-direction: row; justify-content: space-between;  height: 30px;margin-right: 10px;">
             <div style="border: 1px solid black; width: 150px; display: flex; align-items: center;">
                 <p style="position: absolute; margin-right: 7px;font-size: 13px;">انتخاب از گالری</p>
                 <input style="opacity: 0; height: 100%; width: 100%;" accept="video/*" type="file" />
@@ -18,22 +20,40 @@
             <input type="submit" value="ارسال" />
         </div>
 
-        <div style="margin-left: auto;display: flex;flex-direction: row; justify-content: center; flex:1">
+        <!-- <div style="margin-left: auto;display: flex;flex-direction: row; justify-content: center; flex:1">
             <h2 onclick="_stop()" style="margin: 0 15px; cursor: pointer;">⏸</h2>
             <h2 onclick="_play()" style="margin: 0px 15px 0; cursor: pointer;">&#9654;&#65039;</h2>
-        </div>
+        </div> -->
     </form>
 
     <div id="part" dir="ltr"
-        style="justify-content: center;margin-right: 10px; width: calc(100% - 20px);height: 40px;border: 1px solid black;display: flex;flex-direction: row;">
+        style="justify-content: center;margin-right: 10px; width: calc(100% - 20px);height: 40px;border: 1px solid rgb(139, 138, 138);display: flex;flex-direction: row;">
 
     </div>
 
-    <video id="mainVideo"
-        style="margin-right: 10px; width: calc(100% - 20px); height: calc(100% - 175px); object-fit: fill; resize: vertical;"
-        muted aria-readonly="false">
-        <source type="video/mp4" />
-    </video>
+    <div dir="ltr"
+        style="margin-right: 10px;width: calc(100% - 20px); height: calc(100% - 175px); position: relative; display: flex; flex-direction: row; justify-content: center;"
+        class="player">
+        <video id="mainVideo" style=" width: 100%; height: 100%; object-fit: fill; resize: vertical;" controls muted>
+            <source type="video/mp4">
+        </video>
+        <div class="controls">
+            <button class="play" data-icon="▶" aria-label="play pause toggle"></button>
+            <div style="background-color: #fffe; border: 1px solid rgb(124, 123, 123); border-radius: 3px;"><button
+                    class="stop" data-icon="⚫" aria-label="stop"
+                    style="transform: scale(.8); border-width: 0px;"></button></div>
+            <div class="timer">
+                <div></div>
+                <span aria-label="timer">00:00</span>
+            </div>
+            <button class="rwd" data-icon="◀" aria-label="rewind" disabled style="opacity: 0;"></button>
+            <button class="fwd" data-icon="▶" aria-label="fast forward" disabled style="opacity: 0;"></button>
+            <button id="dur"></button>
+        </div>
+    </div>
+
+
+
     <div id="divScroll" style="height: 110px; width: 360px; margin: 5px auto 0;">
         <p id="p"
             style="font-size: 16.5px; line-height: 1.9; font-weight: 600;font-family: monospace, sans-serif; padding: 10px; text-align: justify;">
@@ -48,16 +68,16 @@
 
 
     let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    // const localhost = 'http://localhost:4000'
-    const localhost = 'http://192.168.72.240:4000'
+    const localhost = 'http://localhost:4000'
+    // const localhost = 'http://192.168.72.240:4000'
 
 
 
 
     let count = 20, int, int2, int3, audio1, audio2, playCount = 0, text1, text2, started, s = 0, s2, s3 = 0, a, oldCurrentTime = -1
 
-    function _play() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').play() }
-    function _stop() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').pause() }
+    // function _play() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').play() }
+    // function _stop() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').pause() }
 
     async function sendFile(event) {
         event.preventDefault();
@@ -73,6 +93,15 @@
 
         video.ondurationchange = async function () {
             if (!started) {
+
+                const seconder = () => {
+                    var countDownDate = (document.querySelector('video#mainVideo').duration * 1000)
+                    var minutes = Math.floor((countDownDate % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((countDownDate % (1000 * 60)) / 1000);
+                    return { part1: '00:' + String(minutes) + ':' + String(seconds) }
+                }
+
+                document.getElementById('dur').setAttribute('data-icon', seconder().part1);
                 document.getElementById('part').innerHTML = ''
                 const videoPart = document.querySelector('video#mainVideo').duration / 60
                 for (let i = 0; i <= videoPart; i++) {
@@ -107,7 +136,10 @@
                                 setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
                                 if (audio1) document.querySelector('audio').src = `${localhost}/upload/` + audio1
                                 document.getElementById('p').innerHTML = text1
+                                document.querySelector('video#mainVideo').pause()
                                 document.querySelector('video#mainVideo').play()
+                                play.setAttribute('data-icon', 'S');
+
 
                                 document.getElementById('divScroll').scrollTo(0, 0)
 
@@ -119,6 +151,8 @@
                                 jsonFile.send();
                                 if (jsonFile.status != 404) {
                                     document.querySelector('video#mainVideo').play()
+                                    play.setAttribute('data-icon', 'S');
+
                                     setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
                                     document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + (i * 60) + '.mp3'
                                     s3 = i * 60
@@ -180,6 +214,7 @@
                     document.getElementById('p').innerHTML = data.text
                     text1 = data.text
                     video.play()
+                    play.setAttribute('data-icon', 'S');
                     document.getElementById('divScroll').scrollTo(0, 0)
                     count = 0
                     audio.src = `${localhost}/upload/` + data.audioUrl
@@ -289,5 +324,6 @@
     }
 
 </script>
+<script src="client/v.js"></script>
 
 </html>
