@@ -98,7 +98,7 @@
                     var countDownDate = (document.querySelector('video#mainVideo').duration * 1000)
                     var minutes = Math.floor((countDownDate % (1000 * 60 * 60)) / (1000 * 60));
                     var seconds = Math.floor((countDownDate % (1000 * 60)) / 1000);
-                    return { part1: '00:' + String(minutes) + ':' + String(seconds) }
+                    return { part1: String(minutes) + ':' + String(seconds) }
                 }
 
                 document.getElementById('dur').setAttribute('data-icon', seconder().part1);
@@ -136,7 +136,7 @@
                                 setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 2); count = 2 }, 2500);
                                 if (audio1) document.querySelector('audio').src = `${localhost}/upload/` + audio1
                                 document.getElementById('p').innerHTML = text1
-                                document.querySelector('video#mainVideo').pause()
+                                // document.querySelector('video#mainVideo').pause()
                                 document.querySelector('video#mainVideo').play()
                                 play.setAttribute('data-icon', 'S');
 
@@ -145,6 +145,8 @@
 
                             }
                             else {
+                                int3 && clearInterval(int3)
+                                int2 && clearInterval(int2)
                                 document.querySelector('video#mainVideo').currentTime = (i * 60)
                                 var jsonFile = new XMLHttpRequest();
                                 jsonFile.open("GET", `${localhost}/upload/` + audio1 + '.' + (i * 60) + '.txt', true);
@@ -160,8 +162,7 @@
                                 }
                             }
 
-                            int3 && clearInterval(int3)
-                            int2 && clearInterval(int2)
+
                             int3 = setInterval(() => {
                                 for (let i in arr) {
                                     if ((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 60) && s3 < arr[i])) {
