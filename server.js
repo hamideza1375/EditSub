@@ -41,7 +41,7 @@ model.enableExternalScorer(scorerPath);
 
 
 
-app.get('/t',(req,res)=>{
+app.get('/t', (req, res) => {
   res.sendFile(`${RootPath}/public/client/index.html`)
 })
 
@@ -151,16 +151,15 @@ async function createSubtitle(url, fileName) {
       console.log('audio length', audioLength);
       let result = model.stt(audioBuffer);
       const { text } = await translate(result, { to: 'fa' });
-      // const { text } = await translate(result, { to: 'fa' })
 
       const txt = fileName + '.txt'
       fs.writeFileSync(`${rootPath}/public/upload/${txt}`, text);
       const wav = fileName + '.wav'
-      // execSync(`espeak-ng -v fa+m3 -f ${rootPath}/test.txt -s 150 -p 15 -a 110 -w ${rootPath}/public/upload/${wav}`)
-      // execSync(`espeak-ng -v fa+f5 -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 90 -w ${rootPath}/public/upload/${wav}`)
-      execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 100 -w ${rootPath}/public/upload/${wav}`)
-
-      resolve({ subtitle: text, audioUrl: wav, audioLength })
+      const mp3 = fileName + '.mp3'
+      execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 130 -w ${rootPath}/public/upload/${wav}`)
+      execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -af "equalizer=f=1000:width_type=h:width=1500:g=-10" -ar 44100 ${rootPath}/public/upload/${mp3}`)
+      fs.unlinkSync(`${rootPath}/public/upload/${wav}`)
+      resolve({ subtitle: text, audioUrl: mp3, audioLength })
     });
   })
 }
