@@ -83,8 +83,8 @@ app.post('/upload', async (req, res) => {
       clearInterval(int)
       fs.existsSync(`${RootPath}/public/upload/${fileName}.${s}.mp4`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${s}.mp4`)
       fs.existsSync(`${RootPath}/public/upload/${fileName}.${s}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${s}.mp4.wav`)
-      fs.existsSync(`${RootPath}/public/upload/${fileName}.${30}.mp4`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${30}.mp4`)
-      fs.existsSync(`${RootPath}/public/upload/${fileName}.${30}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${30}.mp4.wav`)
+      fs.existsSync(`${RootPath}/public/upload/${fileName}.${60}.mp4`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${60}.mp4`)
+      fs.existsSync(`${RootPath}/public/upload/${fileName}.${60}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${60}.mp4.wav`)
       fs.existsSync(`${RootPath}/public/upload/${fileName}`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}`)
     }
   }, time);
