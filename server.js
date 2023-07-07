@@ -4,6 +4,7 @@ const app = express();
 const fileUpload = require("express-fileupload");
 const setHeaders = require("./middleware/header");
 const RootPath = require("app-root-path");
+const { getAudioDurationInSeconds } = require('get-audio-duration')
 
 //! download models
 //! install Sox
@@ -161,9 +162,19 @@ async function createSubtitle(url, fileName) {
       const wav = fileName + '.wav'
       const mp3 = fileName + '.mp3'
       execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 147 -p 50 -a 130 -w ${rootPath}/public/upload/${wav}`)
-      execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -af "equalizer=f=1000:width_type=h:width=1500:g=-10" -ar 44100 ${rootPath}/public/upload/${mp3}`)
-      fs.unlinkSync(`${rootPath}/public/upload/${wav}`)
-      resolve({ subtitle: text, audioUrl: mp3, audioLength })
+    
+      getAudioDurationInSeconds(`${rootPath}/public/upload/${wav}`).then((duration) => {
+      console.log(duration);
+        if(duration > 35)
+        execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -af "equalizer=f=1000:width_type=h:width=1500:g=-10" -ar 44100 -filter:a "atempo=1.2" ${rootPath}/public/upload/${mp3}`)
+        else if(duration > 30)
+        execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -af "equalizer=f=1000:width_type=h:width=1500:g=-10" -ar 44100 -filter:a "atempo=1.1" ${rootPath}/public/upload/${mp3}`)
+        else
+        execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -af "equalizer=f=1000:width_type=h:width=1500:g=-10" -ar 44100 ${rootPath}/public/upload/${mp3}`)
+
+        fs.unlinkSync(`${rootPath}/public/upload/${wav}`)
+        resolve({ subtitle: text, audioUrl: mp3, audioLength })
+      })
     });
   })
 }
