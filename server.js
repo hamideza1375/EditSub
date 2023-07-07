@@ -62,33 +62,37 @@ app.post('/upload', async (req, res) => {
   const video = req.files.video;
   const fileName = `${Date.now()}_.${video.name.split('.')[video.name.split('.').length - 1]}`;
   fs.writeFileSync(`${RootPath}/public/upload/${fileName}`, video.data);
-
-  execSync(`${ffmpegStatic} -ss 00:00:00 -i ${RootPath}/public/upload/${fileName} -t 00:01:00 -c copy -f mp4 ${RootPath}/public/upload/${fileName}1.mp4`)
-  const { subtitle, audioUrl } = await createSubtitle(`${RootPath}/public/upload/${fileName}1.mp4`, Date.now())
+let d = Date.now()
+  execSync(`${ffmpegStatic} -ss 00:00:00 -i ${RootPath}/public/upload/${fileName} -t 00:00:30 -c copy -f mp4 ${RootPath}/public/upload/${fileName}1.mp4`)
+  const { subtitle, audioUrl } = await createSubtitle(`${RootPath}/public/upload/${fileName}1.mp4`, d)
   fs.unlinkSync(`${RootPath}/public/upload/${fileName}1.mp4`)
   fs.unlinkSync(`${RootPath}/public/upload/${fileName}1.mp4.wav`)
 
   int = setInterval(async () => {
-    s += 60
-    time = 40000
+    if((s === 0 && (`${RootPath}/public/upload/${d}.wav` || `${RootPath}/public/upload/${audioUrl}`)) || (`${RootPath}/public/upload/${fileName}.${s}.mp4`, audioUrl + '.' + s + '.mp3' || `${RootPath}/public/upload/${fileName}.${s - 30}.mp4`, audioUrl + '.' + s + '.mp3')  )
+    s += 30
     if (req.body.duration > (s)) {
       const { part1 } = seconder(s)
-      execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/upload/${fileName} -t 00:01:00 -c copy -f mp4 ${RootPath}/public/upload/${fileName}.${s}.mp4`)
+      execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/upload/${fileName} -t 00:00:30 -c copy -f mp4 ${RootPath}/public/upload/${fileName}.${s}.mp4`)
       await createSubtitle(`${RootPath}/public/upload/${fileName}.${s}.mp4`, audioUrl + '.' + s)
-      fs.existsSync(`${RootPath}/public/upload/${fileName}.${s - 60}.mp4`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${s - 60}.mp4`)
-      fs.existsSync(`${RootPath}/public/upload/${fileName}.${s - 60}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${s - 60}.mp4.wav`)
+      fs.existsSync(`${RootPath}/public/upload/${fileName}.${s - 30}.mp4`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${s - 30}.mp4`)
+      fs.existsSync(`${RootPath}/public/upload/${fileName}.${s - 30}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${s - 30}.mp4.wav`)
     }
 
     if (req.body.duration < (s)) {
       clearInterval(int)
       fs.existsSync(`${RootPath}/public/upload/${fileName}.${s}.mp4`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${s}.mp4`)
       fs.existsSync(`${RootPath}/public/upload/${fileName}.${s}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${s}.mp4.wav`)
-      fs.existsSync(`${RootPath}/public/upload/${fileName}.${60}.mp4`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${60}.mp4`)
-      fs.existsSync(`${RootPath}/public/upload/${fileName}.${60}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${60}.mp4.wav`)
+      fs.existsSync(`${RootPath}/public/upload/${fileName}.${30}.mp4`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${30}.mp4`)
+      fs.existsSync(`${RootPath}/public/upload/${fileName}.${30}.mp4.wav`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}.${30}.mp4.wav`)
       fs.existsSync(`${RootPath}/public/upload/${fileName}`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}`)
     }
-  }, time);
-  time = 40000
+
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaa');
+    console.log('bbbbbbbbbbbbbbbbbbbbbbbbbb');
+
+  }, 15000);
+  time += 20000
 
   res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName })
 })
@@ -156,7 +160,7 @@ async function createSubtitle(url, fileName) {
       fs.writeFileSync(`${rootPath}/public/upload/${txt}`, text);
       const wav = fileName + '.wav'
       const mp3 = fileName + '.mp3'
-      execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 144 -p 50 -a 130 -w ${rootPath}/public/upload/${wav}`)
+      execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 147 -p 50 -a 130 -w ${rootPath}/public/upload/${wav}`)
       execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -af "equalizer=f=1000:width_type=h:width=1500:g=-10" -ar 44100 ${rootPath}/public/upload/${mp3}`)
       fs.unlinkSync(`${rootPath}/public/upload/${wav}`)
       resolve({ subtitle: text, audioUrl: mp3, audioLength })
