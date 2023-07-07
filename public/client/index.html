@@ -134,6 +134,7 @@
                     div.style.border = '1px solid black';
                     div.onclick = (event) => {
                         if (event.target.style.opacity == 1) {
+                            clearInterval(int6)
                             if (i === 0) {
                                 document.querySelector('video#mainVideo').currentTime = 1
                                 document.getElementById('divScroll').scrollTo(0, 0)
@@ -256,7 +257,7 @@
                                     document.getElementById(String('video' + i)).style.opacity = 1
                                     document.getElementById(String('video' + (arr[i] / 30))).style.opacity = 1
                                     // int5 = setTimeout(() => {if(document.querySelector('video#mainVideo').currentTime >= 60 && document.querySelector('video#mainVideo').currentTime < 66) {document.querySelector('video#mainVideo').pause(); clearInterval(int5)} }, 5000);
-                                    int6 = setInterval(() => {if(document.querySelector('video#mainVideo').currentTime >= arr2[i] && document.querySelector('video#mainVideo').currentTime < (arr2[i] + 2)) {document.querySelector('video#mainVideo').pause(); clearInterval(int6)} }, 1900);
+                                    int6 = setInterval(() => {if(document.querySelector('video#mainVideo').currentTime >= arr2[i] && document.querySelector('video#mainVideo').currentTime < (arr2[i] + 5)) {document.querySelector('video#mainVideo').pause(); clearInterval(int6)}; setTimeout(() => {document.querySelector('video#mainVideo').paused && document.querySelector('video#mainVideo').play();}, 5000); }, 30000);
 
                                     if (s >= video.duration) clearInterval(int2)
                                 }

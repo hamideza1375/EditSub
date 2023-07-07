@@ -55,9 +55,9 @@ const seconder = (secound) => {
   return { part1: '00:' + String(minutes) + ':' + String(seconds) }
 }
 
-var time = 1000
+var time = 10000
 app.post('/upload', async (req, res) => {
-  time = 1000
+  time = 10000
   let s = 0, int
   if (!req.files) return res.status(400).json('err')
   const video = req.files.video;
@@ -89,11 +89,8 @@ let d = Date.now()
       fs.existsSync(`${RootPath}/public/upload/${fileName}`) && fs.unlinkSync(`${RootPath}/public/upload/${fileName}`)
     }
 
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaa');
-    console.log('bbbbbbbbbbbbbbbbbbbbbbbbbb');
-
-  }, 15000);
-  time += 20000
+  }, time);
+  time += 5000
 
   res.status(200).json({ text: subtitle, audioUrl, videoUrl: fileName })
 })
