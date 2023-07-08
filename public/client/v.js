@@ -23,6 +23,7 @@ function playPauseMedia() {
     media.play();
   } else {
     play.setAttribute('data-icon', '▶');
+    document.querySelector('audio').pause()
     media.pause();
   }
 }}

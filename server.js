@@ -158,15 +158,15 @@ async function createSubtitle(url, fileName) {
       fs.writeFileSync(`${rootPath}/public/upload/${txt}`, text);
       const wav = fileName + '.wav'
       const mp3 = fileName + '.mp3'
-      execSync(`espeak-ng -v fa+m3 -f ${rootPath}/public/upload/${txt} -s 147 -p 45 -a 90 -w ${rootPath}/public/upload/${wav}`)
+      execSync(`espeak-ng -v fa+m3 -f ${rootPath}/public/upload/${txt} -s 148 -p 45 -a 90 -w ${rootPath}/public/upload/${wav}`)
       // execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 147 -p 50 -a 135 -w ${rootPath}/public/upload/${wav}`)
     
       getAudioDurationInSeconds(`${rootPath}/public/upload/${wav}`).then((duration) => {
-        if(duration > 36)
-        execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -filter_complex "atempo=1.2,equalizer=f=1000:width_type=h:width=1500:g=-10,aresample=44100" ${rootPath}/public/upload/${mp3}`)
-        else if(duration > 30)
-        execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -filter_complex "atempo=1.1,equalizer=f=1000:width_type=h:width=1500:g=-10,aresample=44100" ${rootPath}/public/upload/${mp3}`)
-        else
+        // if(duration > 36)
+        // execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -filter_complex "atempo=1.2,equalizer=f=1000:width_type=h:width=1500:g=-10,aresample=44100" ${rootPath}/public/upload/${mp3}`)
+        //  else if(duration > 32)
+        // execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -filter_complex "atempo=1.1,equalizer=f=1000:width_type=h:width=1500:g=-10,aresample=44100" ${rootPath}/public/upload/${mp3}`)
+        // else
         execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -af "equalizer=f=1000:width_type=h:width=1500:g=-10" -ar 44100 ${rootPath}/public/upload/${mp3}`)
 
         fs.unlinkSync(`${rootPath}/public/upload/${wav}`)
