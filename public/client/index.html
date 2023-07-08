@@ -256,7 +256,7 @@
 
                                     document.getElementById(String('video' + i)).style.opacity = 1
                                     document.getElementById(String('video' + (arr[i] / 30))).style.opacity = 1
-                                    int6 = setTimeout(() => {if(document.querySelector('video#mainVideo').currentTime >= arr2[i] && document.querySelector('video#mainVideo').currentTime < (arr2[i] + 5)) {document.querySelector('video#mainVideo').pause(); clearInterval(int6)}; setTimeout(() => {document.querySelector('video#mainVideo').paused && document.querySelector('video#mainVideo').play();}, 10000); }, 30000);
+                                    int6 = setTimeout(() => {if(document.querySelector('video#mainVideo').currentTime >= arr2[i] && document.querySelector('video#mainVideo').currentTime < (arr2[i] + 5)) {document.querySelector('video#mainVideo').pause(); clearInterval(int6)}; setTimeout(() => {http.open('HEAD', `${localhost}/upload/` + data.audioUrl + '.' + (a + 30) + '.mp3', false);http.send();(document.querySelector('video#mainVideo').paused && http.status != 404) && document.querySelector('video#mainVideo').play();}, 3000); }, 30000);
 
                                     if (s >= video.duration) clearInterval(int2)
                                 }
