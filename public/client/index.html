@@ -70,16 +70,13 @@
     let arr = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900]
     let arr2 = [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900]
     // let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    const localhost = 'http://localhost:4000'
-    // const localhost = 'http://192.168.102.240:4000'
+    // const localhost = 'http://localhost:4000'
+    const localhost = 'http://192.168.223.240:4000'
 
 
 
 
     let count = 20, int, int2, int3, audio1, audio2, playCount = 0, text1, text2, started, s = 0, s2, s3 = 0, a, m = 0, oldCurrentTime = -1, int4, int5, int6
-
-    // function _play() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').play() }
-    // function _stop() { document.getElementById('p').innerHTML && document.querySelector('video#mainVideo').pause() }
 
     async function sendFile(event) {
 
@@ -135,7 +132,7 @@
                     div.onclick = (event) => {
                         if (event.target.style.opacity == 1) {
                             int6 && clearInterval(int6)
-                            setTimeout(() => { document.querySelector('video#mainVideo').play() }, 1000)
+                            setTimeout(() => { document.querySelector('video#mainVideo').play() }, 1100)
                             if (i === 0) {
                                 document.querySelector('video#mainVideo').currentTime = 1
                                 document.getElementById('divScroll').scrollTo(0, 1)
@@ -157,7 +154,7 @@
                                 jsonFile.send();
                                 if (jsonFile.status != 404) {
                                     document.querySelector('video#mainVideo').play()
-                                    setTimeout(() => { document.querySelector('video#mainVideo').play() }, 600)
+                                    setTimeout(() => { document.querySelector('video#mainVideo').play() }, 1100)
                                     play.setAttribute('data-icon', 'S');
 
                                     setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 18); count = 18 }, 3000);
@@ -178,7 +175,7 @@
                                         jsonFile.open("GET", url, true);
                                         jsonFile.send();
                                         if (jsonFile.status != 404) {
-                                            setTimeout(() => { document.querySelector('video#mainVideo').play() }, 500)
+                                            setTimeout(() => { document.querySelector('video#mainVideo').play() }, 1100)
                                             setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 18); count = 18 }, 3000);
                                             jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 1); count = 1 }
                                             document.getElementById(String(i)).style.opacity = 1
@@ -241,7 +238,7 @@
                                 if (http.status != 404) {
                                     clearInterval(int4)
                                     document.querySelector('video#mainVideo').play()
-                                    setTimeout(() => { document.querySelector('video#mainVideo').play() }, 500);
+                                    setTimeout(() => { document.querySelector('video#mainVideo').play() }, 1100);
                                     setTimeout(() => { document.querySelector('#mainVideo').paused && document.querySelector('video#mainVideo').play() }, 2000);
                                     s = arr[i]
                                     audio.src = `${localhost}/upload/` + data.audioUrl + '.' + s + '.mp3'
@@ -288,7 +285,7 @@
             setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 18); count = 18 }, 3000);
             if (audio1) document.querySelector('audio').src = `${localhost}/upload/` + audio1
             document.getElementById('p').innerHTML = text1
-            
+
 
             int3 = setInterval(() => {
                 for (let i in arr) {
@@ -300,7 +297,7 @@
                         jsonFile.open("GET", url, true);
                         jsonFile.send();
                         if (jsonFile.status != 404) {
-                            setTimeout(() => {document.querySelector('video#mainVideo').play()}, 100);
+                            setTimeout(() => { document.querySelector('video#mainVideo').play() }, 1100);
                             setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 17); count = 17 }, 3000);
                             jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 1); count = 1 }
                             document.getElementById(String(i)).style.opacity = 1
@@ -340,14 +337,14 @@
         if (int) clearInterval(int)
     }
 
-    setInterval(() => {
+    document.querySelector('video#mainVideo').addEventListener('timeupdate', () => {
         for (let i in arr) {
             if (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime <= (arr[i] + 1) && arr[i] != m) {
                 m = arr[i]
                 document.querySelector('video#mainVideo').pause()
             }
         }
-    }, 1000);
+    });
 
 </script>
 <script src="/client/v.js"></script>

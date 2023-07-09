@@ -4,12 +4,11 @@ const app = express();
 const fileUpload = require("express-fileupload");
 const setHeaders = require("./middleware/header");
 const RootPath = require("app-root-path");
-const { getAudioDurationInSeconds } = require('get-audio-duration')
+// const { getAudioDurationInSeconds } = require('get-audio-duration')
 
 //! download models
 //! install Sox
 //! Sox set to envaironment
-//! npx node@14.0.0 ./index.js
 const DeepSpeech = require('deepspeech');
 const Sox = require('sox-stream');
 const MemoryStream = require('memory-stream');
@@ -18,7 +17,6 @@ const Wav = require('node-wav');
 const rootPath = require('app-root-path');
 const { execSync } = require('child_process');
 const ffmpegStatic = require('ffmpeg-static');
-// const { translate } = require('@vitalets/google-translate-api');
 // const translate = require('./middleware/translate');
 const translate = require('./middleware/translate2');
 
