@@ -19,8 +19,8 @@ const rootPath = require('app-root-path');
 const { execSync } = require('child_process');
 const ffmpegStatic = require('ffmpeg-static');
 // const { translate } = require('@vitalets/google-translate-api');
-const translate = require('./middleware/translate');
-
+// const translate = require('./middleware/translate');
+const translate = require('./middleware/translate2');
 
 
 app.use(express.json());
@@ -63,15 +63,15 @@ app.post('/upload', async (req, res) => {
   const video = req.files.video;
   const fileName = `${Date.now()}_.${video.name.split('.')[video.name.split('.').length - 1]}`;
   fs.writeFileSync(`${RootPath}/public/upload/${fileName}`, video.data);
-let d = Date.now()
+  let d = Date.now()
   execSync(`${ffmpegStatic} -ss 00:00:00 -i ${RootPath}/public/upload/${fileName} -t 00:00:30 -c copy -f mp4 ${RootPath}/public/upload/${fileName}1.mp4`)
   const { subtitle, audioUrl } = await createSubtitle(`${RootPath}/public/upload/${fileName}1.mp4`, d)
   fs.unlinkSync(`${RootPath}/public/upload/${fileName}1.mp4`)
   fs.unlinkSync(`${RootPath}/public/upload/${fileName}1.mp4.wav`)
 
   int = setInterval(async () => {
-    if((s === 0 && (`${RootPath}/public/upload/${d}.wav` || `${RootPath}/public/upload/${audioUrl}`)) || (`${RootPath}/public/upload/${fileName}.${s}.mp4`, audioUrl + '.' + s + '.mp3' || `${RootPath}/public/upload/${fileName}.${s - 30}.mp4`, audioUrl + '.' + s + '.mp3')  )
-    s += 30
+    if ((s === 0 && (`${RootPath}/public/upload/${d}.wav` || `${RootPath}/public/upload/${audioUrl}`)) || (`${RootPath}/public/upload/${fileName}.${s}.mp4`, audioUrl + '.' + s + '.mp3' || `${RootPath}/public/upload/${fileName}.${s - 30}.mp4`, audioUrl + '.' + s + '.mp3'))
+      s += 30
     if (req.body.duration > (s)) {
       const { part1 } = seconder(s)
       execSync(`${ffmpegStatic} -ss ${part1} -i ${RootPath}/public/upload/${fileName} -t 00:00:30 -c copy -f mp4 ${RootPath}/public/upload/${fileName}.${s}.mp4`)
@@ -107,72 +107,77 @@ app.listen(port, (err) => { console.log(`App Listen to port ${port}`) })
 
 async function createSubtitle(url, fileName) {
   return new Promise((resolve, reject) => {
+    try {
 
-    let audioFile = transcribeLocalVideo(url)
 
-    if (!fs.existsSync(audioFile)) {
-      console.log('file missing:', audioFile);
-      process.exit();
-    }
+      let audioFile = transcribeLocalVideo(url)
 
-    const buffer = fs.readFileSync(audioFile);
-    const result = Wav.decode(buffer);
+      if (!fs.existsSync(audioFile)) {
+        console.log('file missing:', audioFile);
+        process.exit();
+      }
 
-    if (result.sampleRate < desiredSampleRate) {
-      console.error('Warning: original sample rate (' + result.sampleRate + ') is lower than ' + desiredSampleRate + 'Hz. Up-sampling might produce erratic speech recognition.');
-    }
+      const buffer = fs.readFileSync(audioFile);
+      const result = Wav.decode(buffer);
 
-    function bufferToStream(buffer) {
-      let stream = new Duplex();
-      stream.push(buffer);
-      stream.push(null);
-      return stream;
-    }
+      if (result?.sampleRate < desiredSampleRate) {
+        console.error('Warning: original sample rate (' + result.sampleRate + ') is lower than ' + desiredSampleRate + 'Hz. Up-sampling might produce erratic speech recognition.');
+      }
 
-    let audioStream = new MemoryStream();
-    bufferToStream(buffer).
-      pipe(Sox({
-        global: {
-          'no-dither': true,
-        },
-        output: {
-          bits: 16,
-          rate: desiredSampleRate,
-          channels: 1,
-          encoding: 'signed-integer',
-          endian: 'little',
-          compression: 0.0,
-          type: 'raw'
-        }
-      })).
-      pipe(audioStream);
+      function bufferToStream(buffer) {
+        let stream = new Duplex();
+        stream.push(buffer);
+        stream.push(null);
+        return stream;
+      }
 
-    audioStream.on('finish', async () => {
-      let audioBuffer = audioStream.toBuffer();
-      const audioLength = (audioBuffer.length / 2) * (1 / desiredSampleRate);
-      console.log('audio length', audioLength);
-      let result = model.stt(audioBuffer);
-      const { text } = await translate(result, { to: 'fa' });
+      let audioStream = new MemoryStream();
+      bufferToStream(buffer).
+        pipe(Sox({
+          global: {
+            'no-dither': true,
+          },
+          output: {
+            bits: 16,
+            rate: desiredSampleRate,
+            channels: 1,
+            encoding: 'signed-integer',
+            endian: 'little',
+            compression: 0.0,
+            type: 'raw'
+          }
+        })).
+        pipe(audioStream);
 
-      const txt = fileName + '.txt'
-      fs.writeFileSync(`${rootPath}/public/upload/${txt}`, text);
-      const wav = fileName + '.wav'
-      const mp3 = fileName + '.mp3'
-      execSync(`espeak-ng -v fa+m3 -f ${rootPath}/public/upload/${txt} -s 148 -p 45 -a 90 -w ${rootPath}/public/upload/${wav}`)
-      // execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 147 -p 50 -a 135 -w ${rootPath}/public/upload/${wav}`)
-    
-      getAudioDurationInSeconds(`${rootPath}/public/upload/${wav}`).then((duration) => {
+      audioStream.on('finish', async () => {
+        let audioBuffer = audioStream.toBuffer();
+        const audioLength = (audioBuffer.length / 2) * (1 / desiredSampleRate);
+        if(audioLength > 0){
+        console.log('audio length', audioLength);
+        let result = model.stt(audioBuffer);
+        const { text } = await translate(result, { to: 'fa' });
+
+        const txt = fileName + '.txt'
+        fs.writeFileSync(`${rootPath}/public/upload/${txt}`, text);
+        const wav = fileName + '.wav'
+        const mp3 = fileName + '.mp3'
+        // execSync(`espeak-ng -v fa+m3 -f ${rootPath}/public/upload/${txt} -s 148 -p 45 -a 90 -w ${rootPath}/public/upload/${wav}`)
+        execSync(`espeak-ng -v fa+Diogo -f ${rootPath}/public/upload/${txt} -s 147 -p 40 -a 140 -w ${rootPath}/public/upload/${wav}`)
+        // getAudioDurationInSeconds(`${rootPath}/public/upload/${wav}`).then((duration) => {
         // if(duration > 36)
         // execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -filter_complex "atempo=1.2,equalizer=f=1000:width_type=h:width=1500:g=-10,aresample=44100" ${rootPath}/public/upload/${mp3}`)
         //  else if(duration > 32)
         // execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -filter_complex "atempo=1.1,equalizer=f=1000:width_type=h:width=1500:g=-10,aresample=44100" ${rootPath}/public/upload/${mp3}`)
         // else
         execSync(`${ffmpegStatic} -i ${rootPath}/public/upload/${wav} -af "equalizer=f=1000:width_type=h:width=1500:g=-10" -ar 44100 ${rootPath}/public/upload/${mp3}`)
-
         fs.unlinkSync(`${rootPath}/public/upload/${wav}`)
         resolve({ subtitle: text, audioUrl: mp3, audioLength })
-      })
-    });
+        // })
+}
+      });
+    } catch (error) {
+
+    }
   })
 }
 
