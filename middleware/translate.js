@@ -6,7 +6,12 @@ const response = await fetch("http://127.0.0.1:5000/translate", {
 	body: JSON.stringify({
     q: data,
     source: "en",
-    target: to
+    target: to,
+		split_sentences:true,
+		category:'technology',
+		// format:'html'
+		// preserve_formatting:true,
+		// dictionary:'url.json',
 	}),
 	headers: { "Content-Type": "application/json" }
 });

@@ -17,8 +17,8 @@ const Wav = require('node-wav');
 const rootPath = require('app-root-path');
 const { execSync } = require('child_process');
 const ffmpegStatic = require('ffmpeg-static');
-// const translate = require('./middleware/translate');
-const translate = require('./middleware/translate2');
+const translate = require('./middleware/translate');
+// const translate = require('./middleware/translate2');
 
 
 app.use(express.json());
