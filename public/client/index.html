@@ -66,8 +66,8 @@
     let arr = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900]
     let arr2 = [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900]
     // let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    const localhost = 'http://localhost:4000'
-    // const localhost = 'http://192.168.48.240:4000'
+    // const localhost = 'http://localhost:4000'
+    const localhost = 'http://192.168.160.240:4000'
 
 
 
@@ -268,6 +268,7 @@
 
 
     document.querySelector('video#mainVideo').onplay = () => {
+        setTimeout(() => {m = ''}, 3000);
         document.getElementById('divScroll').style.overflowY = 'scroll'
         const video = document.querySelector('video#mainVideo').duration
 
@@ -285,7 +286,7 @@
 
             int3 = setInterval(() => {
                 for (let i in arr) {
-                    if (((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 30) && s2 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 2))) && document.querySelector('audio').paused) {
+                    if (((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 30) && s2 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime <= (arr[i] + 2))) && document.querySelector('audio').paused) {
                       
                         s2 = arr[i]
                         if (document.querySelector('audio').src != `${localhost}/upload/` + audio1 + '.' + arr[i] + '.mp3') document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.mp3'
