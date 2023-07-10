@@ -66,8 +66,8 @@
     let arr = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900]
     let arr2 = [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900]
     // let arr = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900]
-    // const localhost = 'http://localhost:4000'
-    const localhost = 'http://192.168.48.240:4000'
+    const localhost = 'http://localhost:4000'
+    // const localhost = 'http://192.168.48.240:4000'
 
 
 
@@ -286,6 +286,7 @@
             int3 = setInterval(() => {
                 for (let i in arr) {
                     if (((document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 30) && s2 < arr[i]) || (document.querySelector('video#mainVideo').currentTime >= arr[i] && document.querySelector('video#mainVideo').currentTime < (arr[i] + 2))) && document.querySelector('audio').paused) {
+                      
                         s2 = arr[i]
                         if (document.querySelector('audio').src != `${localhost}/upload/` + audio1 + '.' + arr[i] + '.mp3') document.querySelector('audio').src = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.mp3'
                         var url = `${localhost}/upload/` + audio1 + '.' + arr[i] + '.txt'
@@ -293,6 +294,8 @@
                         jsonFile.open("GET", url, true);
                         jsonFile.send();
                         if (jsonFile.status != 404) {
+                            if(document.querySelector('video#mainVideo').currentTime >= 30 && document.querySelector('video#mainVideo').currentTime < 32){setTimeout(() => {if(document.querySelector('video#mainVideo').currentTime >= 30 && document.querySelector('video#mainVideo').currentTime < 32 && document.querySelector('audio').paused && playCount > 1) document.querySelector('video#mainVideo').play()}, 5000);}
+                        if(document.querySelector('video#mainVideo').currentTime >= 30 && document.querySelector('video#mainVideo').currentTime < 32){setTimeout(() => {if(document.querySelector('video#mainVideo').currentTime >= 30 && document.querySelector('video#mainVideo').currentTime < 32 && document.querySelector('audio').paused && playCount > 1) document.querySelector('video#mainVideo').play()}, 12000);}
                             setTimeout(() => { document.querySelector('video#mainVideo').play() }, 1100);
                             setTimeout(() => { document.getElementById('divScroll').scrollTo(0, 17); count = 17 }, 3000);
                             jsonFile.onreadystatechange = function () { if (jsonFile.readyState == 4 && jsonFile.status == 200) document.getElementById('p').innerHTML = jsonFile.responseText; document.getElementById('divScroll').scrollTo(0, 1); count = 1 }
